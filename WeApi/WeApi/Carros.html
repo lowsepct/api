@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Carros Web API</title>
+</head>
+<body id=" body">
+
+    <div >
+        <h2>Carros</h2>
+        <ul id="carros" />
+    </div>
+    <div>
+        <h2>Busqueda por ID</h2>
+        <input type="text" id="carId" size="5" />
+        <input type="button" value="Buscar" onclick="find();" />
+        <p id="carro" />
+
+
+        
+
+    </div>
+
+    <div>
+        <h2>
+            Te gustaria pedir un auto?
+        </h2>
+
+        <form action="#" name="dato">
+            <p><input type="text" name="miCookie" /> Escribe el modelo que quieres</p>
+            <p>
+                <input type="button" value="Guardar" onclick="guardar()" /> ...
+
+
+                <input type="button" value="Comprobar" onclick="alert(document.cookie)" />
+
+            </p>
+
+
+        </form>
+        
+    </div>
+
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+    <script>
+        var uri = 'api/carro';
+
+        $(document).ready(function ()  {
+            
+            $.getJSON(uri)
+                .done(function (data) {
+                  
+                    $.each(data, function (key, item) {
+
+                        $('<li>', { text: formatItem(item) }).appendTo($('#carros'));
+                    });
+                });
+        });
+
+        function formatItem(item) {
+            return item.idcarro + '-' + item.marca + '-' + item.modelo;
+        }
+
+        function find() {
+            var id = $('#carId').val();
+            $.getJSON(uri + '/' + id)
+                .done(function (data) {
+                    $('#carro').text(formatItem(data));
+                })
+                .fail(function (jqXHR, textStatus, err) {
+                    $('#carro').text('Error: ' + err);
+                });
+        }
+        
+        function guardarCookie(nombre, valor, fecha) {
+            document.cookie = nombre + "=" + valor + ";expires=" + fecha;
+        }
+        caduca = "31 Dec 2020 23:59:59 GMT"
+        function guardar() {
+            tuCookie = "Cookie:"
+            tuValor = document.dato.miCookie.value
+            guardarCookie(tuCookie, tuValor, caduca)
+        }
+        var misCookies = document.cookie;
+        document.write("COOKIES: [" + misCookies + "]");
+
+    </script>
+</body>
+</html>
+
+
